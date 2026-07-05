@@ -86,7 +86,7 @@ def _fallback(msg):
 def _gemini_review(prompt):
     body = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.3, "response_mime_type": "application/json"},
+        "generationConfig": {"temperature": 0, "response_mime_type": "application/json"},
     }
     last = "unknown error"
     for model in dict.fromkeys(GEMINI_MODELS):  # de-duplicated, order preserved
@@ -110,7 +110,7 @@ def _ollama_review(prompt):
     resp = requests.post(
         OLLAMA_URL,
         json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False,
-              "format": "json", "options": {"temperature": 0.3}},
+              "format": "json", "options": {"temperature": 0}},
         timeout=240,
     )
     resp.raise_for_status()

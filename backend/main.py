@@ -6,6 +6,7 @@ Run:  uvicorn main:app --reload   then open http://localhost:8000
 """
 
 import os
+import time
 from typing import Optional
 
 from fastapi import FastAPI
@@ -27,6 +28,11 @@ app.add_middleware(
 )
 
 
+# --- simple in-memory cache so repeat analyses of the same repo match ---
+_CACHE = {}
+CACHE_TTL_SECONDS = 3600  # 1 hour, then it re-analyzes
+
+
 class AnalyzeRequest(BaseModel):
     url: str
     github_token: Optional[str] = None
@@ -38,6 +44,12 @@ def analyze(req: AnalyzeRequest):
         owner, repo = parse_repo_url(req.url)
     except ValueError as e:
         return {"error": str(e)}
+
+    # Return a cached result if we analyzed this repo recently.
+    cache_key = f"{owner}/{repo}"
+    hit = _CACHE.get(cache_key)
+    if hit and (time.time() - hit[0]) < CACHE_TTL_SECONDS:
+        return hit[1]
 
     try:
         repo_data = fetch_repo_data(owner, repo, req.github_token)
@@ -61,7 +73,7 @@ def analyze(req: AnalyzeRequest):
     else:
         final_score = rule_score
 
-    return {
+    result = {
         "repo": f"{owner}/{repo}",
         "score": final_score,
         "rule_score": rule_score,
@@ -70,6 +82,8 @@ def analyze(req: AnalyzeRequest):
         "checks": checks,
         "review": review,
     }
+    _CACHE[cache_key] = (time.time(), result)
+    return result
 
 
 FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend")
