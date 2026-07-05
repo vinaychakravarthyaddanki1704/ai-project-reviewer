@@ -59,6 +59,7 @@
   h3 { margin:22px 0 8px; font-size:15px; color:#fff; text-transform:uppercase; letter-spacing:.5px; }
   ul { margin:0; padding-left:20px; } li { margin:5px 0; color:#ddd; }
   .muted { color:var(--muted); } .err { color:#ff5b5b; }
+  code { background:#000; border:1px solid var(--line); padding:1px 6px; border-radius:6px; color:#ffb37a; font-size:13px; }
   .split { display:flex; gap:14px; margin-top:6px; font-size:13px; color:var(--muted); }
   .split span b { color:#ffb37a; }
 </style>
@@ -84,6 +85,14 @@
 </div>
 
 <script>
+function fmt(s) {
+  s = String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  s = s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  s = s.replace(/`([^`]+?)`/g, "<code>$1</code>");
+  return s;
+}
+
 const CHECK_LABELS = {
   has_source_code: "Source code",
   has_readme: "README present",
@@ -123,8 +132,8 @@ async function analyze() {
 
     const r = data.review;
     const langs = (data.languages || []).map(l => '<span class="pill">' + l + '</span>').join("") || '<span class="muted">n/a</span>';
-    const strengths = (r.strengths || []).map(s => "<li>" + s + "</li>").join("") || "<li class='muted'>None detected</li>";
-    const improvements = (r.improvements || []).map(s => "<li>" + s + "</li>").join("") || "<li class='muted'>None</li>";
+    const strengths = (r.strengths || []).map(s => "<li>" + fmt(s) + "</li>").join("") || "<li class='muted'>None detected</li>";
+    const improvements = (r.improvements || []).map(s => "<li>" + fmt(s) + "</li>").join("") || "<li class='muted'>None</li>";
     const aiPart = (data.ai_score != null)
       ? '<span>AI: <b>' + data.ai_score + '</b></span>'
       : '<span>AI: <b>offline</b></span>';
@@ -140,7 +149,7 @@ async function analyze() {
             '<div style="margin-top:6px;">' + langs + '</div>' +
           '</div>' +
         '</div>' +
-        '<div class="meta" style="margin-top:14px;">' + (r.summary || "") + '</div>' +
+        '<div class="meta" style="margin-top:14px;">' + fmt(r.summary || "") + '</div>' +
         '<div class="checks">' + checksHtml + '</div>' +
         '<h3>Strengths</h3><ul>' + strengths + '</ul>' +
         '<h3>Suggested improvements</h3><ul>' + improvements + '</ul>' +

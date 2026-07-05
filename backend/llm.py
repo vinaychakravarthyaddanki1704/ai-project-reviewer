@@ -51,6 +51,7 @@ Automated checks:
 README excerpt (first 2000 chars):
 {readme_text[:2000]}
 
+Write all text in plain language. Do NOT use markdown symbols such as **, backticks, or # in your text.
 Return ONLY valid JSON in EXACTLY this shape (no extra text):
 {{
   "ai_score": <integer 0-100, overall quality for a student portfolio>,
