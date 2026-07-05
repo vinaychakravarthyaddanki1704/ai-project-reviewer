@@ -124,6 +124,7 @@ async function analyze() {
     if (data.error) { out.innerHTML = '<p class="err">' + data.error + '</p>'; btn.disabled = false; return; }
 
     const c = data.checks;
+    const rating = data.score >= 80 ? 'Excellent' : data.score >= 60 ? 'Good' : data.score >= 40 ? 'Fair' : 'Needs work';
     const checksHtml = Object.keys(CHECK_LABELS).map(k => {
       const ok = c[k];
       return '<div class="check"><span class="mark ' + (ok ? "on" : "off") + '">' +
@@ -141,7 +142,7 @@ async function analyze() {
     out.innerHTML =
       '<div class="card">' +
         '<div class="scoreWrap">' +
-          '<div><div class="bigscore">' + data.score + '<small>/100</small></div><div class="muted" style="font-size:12px;margin-top:2px;">Overall score \u00b7 higher is better</div></div>' +
+          '<div><div class="bigscore">' + data.score + '<small>/100</small></div><div class="muted" style="font-size:12px;margin-top:2px;">Overall: <b style="color:#ffb37a;">' + rating + '</b> \u00b7 higher is better</div></div>' +
           '<div>' +
             '<div class="meta">' + data.repo + '</div>' +
             '<div class="meta">Type: <b>' + (r.project_type || "?") + '</b> &middot; Level: <b>' + (r.estimated_developer_level || "?") + '</b></div>' +
@@ -153,6 +154,12 @@ async function analyze() {
         '<div class="checks">' + checksHtml + '</div>' +
         '<h3>Strengths</h3><ul>' + strengths + '</ul>' +
         '<h3>Suggested improvements</h3><ul>' + improvements + '</ul>' +
+        '<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.7;">' +
+          '<b style="color:#fff;">How to read this</b><br>' +
+          '<b>Quality (AI review)</b> - the AI rating of overall quality. Higher is better.<br>' +
+          '<b>Checks</b> - how many good practices (README, tests, license, etc.) are present. Higher is better.<br>' +
+          '<b>Overall score</b> - the two combined. 80+ Excellent, 60-79 Good, 40-59 Fair, below 40 Needs work.' +
+        '</div>' +
       '</div>';
   } catch (e) {
     out.innerHTML = '<p class="err">Request failed: ' + e + '</p>';
