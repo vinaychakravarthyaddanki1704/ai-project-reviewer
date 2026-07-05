@@ -29,7 +29,26 @@ FastAPI (main.py)
 
 ## Tech stack
 
-Python, FastAPI, GitHub REST API, Google Gemini API, Ollama (local LLM), HTML/CSS/JS.
+**Frontend**
+- HTML — page structure (input box, results area)
+- CSS — styling and the dark, gradient theme (single-file, no framework)
+- JavaScript — sends the request to the backend and renders the results
+
+**Backend**
+- Python — core language
+- FastAPI — web framework that handles the `/analyze` API
+- Uvicorn — the server that runs the app
+- Requests — calls the GitHub and Gemini APIs
+- python-dotenv — loads the secret API key from a `.env` file
+
+**AI & data**
+- GitHub REST API — fetches repo files, README, and languages
+- Google Gemini API — generates the AI review and quality score
+- Ollama (local LLM) — optional offline fallback, no API key needed
+
+**Tooling & hosting**
+- Git & GitHub — version control and code hosting
+- Render — cloud hosting for the live demo
 
 ## Getting started (run locally)
 
