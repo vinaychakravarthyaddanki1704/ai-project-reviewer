@@ -135,13 +135,13 @@ async function analyze() {
     const strengths = (r.strengths || []).map(s => "<li>" + fmt(s) + "</li>").join("") || "<li class='muted'>None detected</li>";
     const improvements = (r.improvements || []).map(s => "<li>" + fmt(s) + "</li>").join("") || "<li class='muted'>None</li>";
     const aiPart = (data.ai_score != null)
-      ? '<span>AI: <b>' + data.ai_score + '</b></span>'
-      : '<span>AI: <b>offline</b></span>';
+      ? '<span>Quality (AI review): <b>' + data.ai_score + '/100</b></span>'
+      : '<span>Quality (AI review): <b>offline</b></span>';
 
     out.innerHTML =
       '<div class="card">' +
         '<div class="scoreWrap">' +
-          '<div class="bigscore">' + data.score + '<small>/100</small></div>' +
+          '<div><div class="bigscore">' + data.score + '<small>/100</small></div><div class="muted" style="font-size:12px;margin-top:2px;">Overall score \u00b7 higher is better</div></div>' +
           '<div>' +
             '<div class="meta">' + data.repo + '</div>' +
             '<div class="meta">Type: <b>' + (r.project_type || "?") + '</b> &middot; Level: <b>' + (r.estimated_developer_level || "?") + '</b></div>' +
