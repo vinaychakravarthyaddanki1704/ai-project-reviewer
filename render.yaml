@@ -1,0 +1,14 @@
+# Render deployment config (Blueprint).
+# Render reads this to build and run the app automatically.
+services:
+  - type: web
+    name: ai-project-reviewer
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false          # you paste this secret in the Render dashboard
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
