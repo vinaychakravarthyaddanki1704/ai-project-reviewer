@@ -60,6 +60,10 @@ Then open http://localhost:8000 and paste a repository URL.
 
 Source code, README (presence and depth), tests, CI/CD, license, `.gitignore`, Dockerfile, docs folder, and dependency file.
 
+## A note on scoring
+
+The score blends two parts: objective checks (fixed) and an AI review (probabilistic). Because language models don't answer identically every time, the AI portion can vary slightly between runs. To keep results stable, the AI runs at temperature 0 and each repository's result is cached for one hour, so repeat analyses return the same score. After an hour it re-analyzes, which also lets you see the effect of any improvements you make.
+
 ## Roadmap
 
 - Code-complexity analysis (radon)
